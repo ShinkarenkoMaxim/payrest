@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Transaction {
+  id                   Int       @id @default(autoincrement())
+  payme_transaction_id String    @unique
+  time                 DateTime  @db.Timestamp(3)
+  amount               Int
+  account              Json
+  create_time          DateTime  @default(now()) @db.Timestamp(3)
+  perform_time         DateTime? @db.Timestamp(3)
+  cancel_time          DateTime? @db.Timestamp(3)
+  state                Int       @default(1)
+  reason               Reason?   @relation(fields: [reasonId], references: [id])
+  reasonId             Int?
+}
+
+model Reason {
+  id          Int           @id @default(autoincrement())
+  content     String
+  code        Int           @unique
+  Transaction Transaction[]
+}
+
+model Order {
+  id            Int      @id @default(autoincrement())
+  cart          Json
+  location      Json
+  phoneNumber   String
+  paymentMethod String
+  amount        Int
+  state         Int      @default(0)
+  userId        Int
+  createdAt     DateTime @default(now())
+}
