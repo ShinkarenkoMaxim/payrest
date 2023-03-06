@@ -12,8 +12,6 @@ import {
   GetStatementParams,
   PerformTransactionParams,
 } from './types/params';
-import { Transaction } from '@prisma/client';
-import { traceDeprecation } from 'process';
 
 @Injectable()
 export class PaymeService {

@@ -1,6 +1,9 @@
 import {
+  CancelTransactionParams,
   CheckPerformTransactionParams,
+  CheckTransactionParams,
   CreateTransactionParams,
+  GetStatementParams,
   PerformTransactionParams,
 } from './params';
 
@@ -36,7 +39,10 @@ export type MerchantResponse = {
 export type MerchantResult =
   | CheckPerformTransactionParams.Response
   | CreateTransactionParams.Response
-  | PerformTransactionParams.Response;
+  | PerformTransactionParams.Response
+  | CancelTransactionParams.Response
+  | CheckTransactionParams.Response
+  | GetStatementParams.Response;
 
 export const PaymeMethods = {
   checkPerformTransaction: 'CheckPerformTransaction',
@@ -45,4 +51,5 @@ export const PaymeMethods = {
   cancelTransaction: 'CancelTransaction',
   checkTransaction: 'CheckTransaction',
   getStatement: 'GetStatement',
+  setFiscalData: 'SetFiscalData',
 } as const;
