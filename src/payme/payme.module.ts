@@ -6,11 +6,15 @@ import { TelegramService } from 'src/telegram/telegram.service';
 import { PaymeController } from './payme.controller';
 import InternalServerErrorExceptionFilter from './errors/internal-server.exception.fitler';
 import { TelegramModule } from 'src/telegram/telegram.module';
+import { TransactionService } from 'src/transaction/transaction.service';
+import { OrderService } from 'src/order/order.service';
 
 @Module({
   controllers: [PaymeController],
   providers: [
     PaymeService,
+    TransactionService,
+    OrderService,
     PrismaService,
     {
       provide: APP_FILTER,
