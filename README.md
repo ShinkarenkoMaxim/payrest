@@ -6,8 +6,6 @@ Ready to deploy project with fiscalization, handling all errors and customer not
 
 In project we use [**Nest.js**](https://nestjs.com/), [**TypeScript**](https://www.typescriptlang.org/) and [**Prisma**](https://www.prisma.io/).
 
-[**Vite**](https://vitejs.dev/) helps to bundle very quickly vanilla `Webapp` pages
-
 ## How to use it?
 
 1. Clone this repo
