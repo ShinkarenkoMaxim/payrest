@@ -1,3 +1,5 @@
+![Payrest](https://telegra.ph/file/468567d0f02e43bf62c88.png)
+
 # Billing for Payme payment provider
 
 Ready to deploy project with fiscalization, handling all errors and customer notifier in Telegram.
