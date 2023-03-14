@@ -1,4 +1,4 @@
-import { Account, Transaction } from './common';
+import { Account, OrderDetail, Transaction } from './common';
 
 export namespace CheckPerformTransactionParams {
   export type Request = {
@@ -8,6 +8,7 @@ export namespace CheckPerformTransactionParams {
 
   export type Response = {
     allow: boolean;
+    detail?: OrderDetail;
   };
 }
 

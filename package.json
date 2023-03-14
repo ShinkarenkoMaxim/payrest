@@ -21,12 +21,14 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@nestjs/axios": "^2.0.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^8.0.0",
     "@prisma/client": "^4.9.0",
+    "axios": "^1.3.4",
     "passport-http": "^0.3.0",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",

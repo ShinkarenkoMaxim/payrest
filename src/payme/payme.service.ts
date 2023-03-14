@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { lastValueFrom } from 'rxjs';
 import { PrismaService } from 'src/prisma.service';
+import { TelegramService } from 'src/telegram/telegram.service';
 import { PaymeException } from './errors/payme.exception';
 import { PaymeError } from './errors/payme.error';
-import { Account } from './types/common';
+import { Account, OrderDetail, OrderItem } from './types/common';
 import { OrderState, TransactionState } from './types/enums';
 import {
   CancelTransactionParams,
@@ -15,7 +17,10 @@ import {
 
 @Injectable()
 export class PaymeService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private telegram: TelegramService,
+  ) {}
 
   async checkPerformTransaction(
     params: CheckPerformTransactionParams.Request,
@@ -49,7 +54,23 @@ export class PaymeService {
       throw new PaymeException(PaymeError.INVALID_AMOUNT);
     }
 
-    return { allow: true };
+    // Collect product items for fiscalization
+    const items: OrderItem[] = [];
+
+    for (let [, item] of Object.entries(order.cart)) {
+      items.push({
+        title: item.name,
+        price: item.totalPrice * 100,
+        count: item.count,
+        code: item.code,
+        package_code: item.package_code,
+        vat_percent: item.vat_percent,
+      });
+    }
+
+    const detail: OrderDetail = { receipt_type: 0, items: items };
+
+    return { allow: true, detail };
   }
 
   async createTransaction(
@@ -67,7 +88,7 @@ export class PaymeService {
       const createTime = transaction.create_time.getTime();
       const isExpired = this.checkTransactionExpiration(createTime);
 
-      if (!isExpired) {
+      if (isExpired) {
         await this.prisma.transaction.update({
           where: { id: transaction.id },
           data: {
@@ -96,12 +117,23 @@ export class PaymeService {
 
       // Else operation is allowed (always) after running checkPerformTransaction and then we can create transaction
       if (result.allow) {
+        // Find existed transaction from Payme by order_id. Payme can create another new transaction
+        const orderId = Number(params.account.order_id);
+        const existTransaction = await this.prisma.transaction.findFirst({
+          where: { orderId },
+        });
+
+        if (existTransaction) {
+          throw new PaymeException(PaymeError.TRANSACTION_ALREADY_CREATED);
+        }
+
         const transaction = await this.prisma.transaction.create({
           data: {
             payme_transaction_id: params.id,
             time: new Date(params.time),
             amount: params.amount,
             account: params.account,
+            Order: { connect: { id: orderId } },
           },
         });
 
@@ -150,10 +182,26 @@ export class PaymeService {
       const performTime = new Date();
 
       // If you connect Telegram Bot You can add code here for trigger updates
+      // Your implementation may differ
+      const order = await this.prisma.order.findUnique({
+        include: {
+          User: true,
+        },
+        where: { id: orderId },
+      });
+      await lastValueFrom(
+        this.telegram.notify(
+          order.User.telegramId,
+          `Ваш заказ #${order.id} успешно оплачен`,
+        ),
+      );
+      await lastValueFrom(
+        this.telegram.updateAdminStatus(order.message_id, '💳 Оплачено картой'),
+      );
 
       await this.prisma.order.update({
         where: { id: orderId },
-        data: { state: OrderState.ACCEPTED },
+        data: { state: OrderState.ACCEPTED, status: 'approve' },
       });
 
       await this.prisma.transaction.update({
@@ -222,6 +270,30 @@ export class PaymeService {
           },
         },
       });
+
+      // If you connect Telegram Bot You can add code here for trigger updates
+      // Your implementation may differ
+      const { order_id } = transaction.account as Account;
+      const order = await this.prisma.order.findUnique({
+        include: {
+          User: true,
+        },
+        where: { id: Number(order_id) },
+      });
+      await lastValueFrom(
+        this.telegram.notify(
+          order.User.telegramId,
+          `Ваш платёж по заказу #${order.id} успешно отменён`,
+        ),
+      );
+      await lastValueFrom(
+        this.telegram.updateAdminStatus(order.message_id, '💳 Оплата отменена'),
+      );
+
+      await this.prisma.order.update({
+        where: { id: order_id },
+        data: { state: OrderState.CANCELLED, status: 'decline' },
+      });
     }
 
     return {
@@ -257,10 +329,14 @@ export class PaymeService {
     return {
       transaction: transaction.id.toString(),
       create_time: transaction.create_time.getTime(),
-      cancel_time: transaction.cancel_time.getTime(),
-      perform_time: transaction.perform_time.getTime(),
+      perform_time: transaction?.perform_time
+        ? transaction.perform_time.getTime()
+        : 0,
+      cancel_time: transaction?.cancel_time
+        ? transaction.cancel_time.getTime()
+        : 0,
       state: transaction.state,
-      reason: transaction.reason.code,
+      reason: transaction.reason ? transaction.reason.code : null,
     };
   }
 

@@ -31,6 +31,28 @@ export type Receiver = {
   amount: number;
 };
 
+export type OrderDetail = {
+  receipt_type: number;
+  shipping?: ShippingInfo;
+  items: OrderItem[];
+};
+
+type ShippingInfo = {
+  title: string;
+  price: number;
+};
+
+export type OrderItem = {
+  discount?: number;
+  title: string;
+  price: number;
+  count: number;
+  code: string;
+  units?: number;
+  package_code: string;
+  vat_percent: number;
+};
+
 export type MerchantResponse = {
   id: number;
   result: MerchantResult;
@@ -51,5 +73,4 @@ export const PaymeMethods = {
   cancelTransaction: 'CancelTransaction',
   checkTransaction: 'CheckTransaction',
   getStatement: 'GetStatement',
-  setFiscalData: 'SetFiscalData',
 } as const;

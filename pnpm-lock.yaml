@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@nestjs/axios': ^2.0.0
   '@nestjs/cli': ^8.0.0
   '@nestjs/common': ^8.0.0
   '@nestjs/config': ^2.2.0
@@ -18,6 +19,7 @@ specifiers:
   '@types/supertest': ^2.0.11
   '@typescript-eslint/eslint-plugin': ^5.0.0
   '@typescript-eslint/parser': ^5.0.0
+  axios: ^1.3.4
   eslint: ^8.0.1
   eslint-config-prettier: ^8.3.0
   eslint-plugin-prettier: ^4.0.0
@@ -38,12 +40,14 @@ specifiers:
   typescript: ^4.3.5
 
 dependencies:
+  '@nestjs/axios': 2.0.0_so4uv3egqhi7u5lpiymmr3wlvm
   '@nestjs/common': 8.4.7_mnr6j2del53muneqly5h4y27ai
   '@nestjs/config': 2.2.0_q6tehokzwy3z4akuawpn6kiwbe
   '@nestjs/core': 8.4.7_tdkocbskemo2uwka4xhsbznrba
   '@nestjs/passport': 9.0.0_ajebcnomotz225cztrmzhvaeiq
   '@nestjs/platform-express': 8.4.7_7tsmhnugyerf5okgqzer2mfqme
   '@prisma/client': 4.9.0_prisma@4.9.0
+  axios: 1.3.4
   passport-http: 0.3.0
   passport-local: 1.0.0
   reflect-metadata: 0.1.13
@@ -817,6 +821,20 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
+
+  /@nestjs/axios/2.0.0_so4uv3egqhi7u5lpiymmr3wlvm:
+    resolution: {integrity: sha512-F6oceoQLEn031uun8NiommeMkRIojQqVryxQy/mK7fx0CI0KbgkJL3SloCQcsOD+agoEnqKJKXZpEvL6FNswJg==}
+    peerDependencies:
+      '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0
+      axios: ^1.3.1
+      reflect-metadata: ^0.1.12
+      rxjs: ^6.0.0 || ^7.0.0
+    dependencies:
+      '@nestjs/common': 8.4.7_mnr6j2del53muneqly5h4y27ai
+      axios: 1.3.4
+      reflect-metadata: 0.1.13
+      rxjs: 7.8.0
+    dev: false
 
   /@nestjs/cli/8.2.8:
     resolution: {integrity: sha512-y5Imcw1EY0OxD3POAM7SLUB1rFdn5FjbfSsyJrokjKmXY+i6KcBdbRrv3Ox7aeJ4W7wXuckIXZEUlK6lC52dnA==}
@@ -1689,6 +1707,16 @@ packages:
       form-data: 4.0.0
     transitivePeerDependencies:
       - debug
+
+  /axios/1.3.4:
+    resolution: {integrity: sha512-toYm+Bsyl6VC5wSkfkbbNB6ROv7KY93PEBBL6xyDczaIHasAiv4wPqQ/c4RjoQzipxRD2W5g21cOqQulZ7rHwQ==}
+    dependencies:
+      follow-redirects: 1.15.2
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /babel-jest/28.1.3_@babel+core@7.20.12:
     resolution: {integrity: sha512-epUaPOEWMk3cWX0M/sPvCHHCe9fMFAa/9hXEgKP8nFfNl/jlGkE9ucq9NqkZGXLDduCJYS0UvSlPUwC0S+rH6Q==}
@@ -4123,6 +4151,10 @@ packages:
     dependencies:
       forwarded: 0.2.0
       ipaddr.js: 1.9.1
+
+  /proxy-from-env/1.1.0:
+    resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
+    dev: false
 
   /pump/3.0.0:
     resolution: {integrity: sha512-LwZy+p3SFs1Pytd/jYct4wpv49HiYCqd9Rlc5ZVdk0V+8Yzv6jR5Blk3TRmPL1ft69TxP0IMZGJ+WPFU2BFhww==}

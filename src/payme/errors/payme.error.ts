@@ -86,6 +86,15 @@ export const PaymeError: PaymeErrorsList = {
       uz: 'Bitim topilmadi',
     },
   },
+  TRANSACTION_ALREADY_CREATED: {
+    name: 'Transaction already created',
+    code: PaymeStatus.TRANSACTION_ALREADY_CREATED,
+    message: {
+      ru: 'Транзакция уже создана или была обработана',
+      en: 'Transaction already created',
+      uz: 'Tranzaksiya allaqachon yaratilgan yoki qayta ishlangan',
+    },
+  },
   NO_REFUND: {
     name: 'No refund after complete',
     code: PaymeStatus.NO_REFUND,

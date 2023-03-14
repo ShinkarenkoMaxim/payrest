@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,15 +10,17 @@ datasource db {
 model Transaction {
   id                   Int       @id @default(autoincrement())
   payme_transaction_id String    @unique
-  time                 DateTime  @db.Timestamp(3)
+  time                 DateTime
   amount               Int
   account              Json
-  create_time          DateTime  @default(now()) @db.Timestamp(3)
-  perform_time         DateTime? @db.Timestamp(3)
-  cancel_time          DateTime? @db.Timestamp(3)
+  create_time          DateTime  @default(now())
+  perform_time         DateTime?
+  cancel_time          DateTime?
   state                Int       @default(1)
-  reason               Reason?   @relation(fields: [reasonId], references: [id])
   reasonId             Int?
+  orderId              Int
+  Order                Order     @relation(fields: [orderId], references: [id])
+  reason               Reason?   @relation(fields: [reasonId], references: [id])
 }
 
 model Reason {
@@ -32,13 +31,38 @@ model Reason {
 }
 
 model Order {
-  id            Int      @id @default(autoincrement())
+  id            Int           @id @default(autoincrement())
   cart          Json
   location      Json
   phoneNumber   String
   paymentMethod String
-  amount        Int
-  state         Int      @default(0)
   userId        Int
-  createdAt     DateTime @default(now())
+  createdAt     DateTime      @default(now())
+  isFake        Boolean?      @default(false)
+  status        String        @default("pending")
+  amount        Int           @default(0)
+  state         Int           @default(0)
+  message_id    Int?
+  User          User          @relation(fields: [userId], references: [id])
+  Transaction   Transaction[]
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  telegramId   Float     @unique
+  username     String?
+  firstName    String?
+  lastName     String?
+  userName     String?
+  language     Language  @default(ru)
+  firstVisitAt DateTime  @default(now())
+  registredAt  DateTime?
+  fullName     String?
+  phoneNumber  String?
+  Order        Order[]
+}
+
+enum Language {
+  ru
+  uz
 }
