@@ -47,15 +47,21 @@ export class OrderService {
   getFiscalData(order: Order): OrderDetail {
     const items: OrderItem[] = [];
 
-    for (let [, item] of Object.entries(order.cart)) {
-      items.push({
-        title: item.name,
-        price: item.totalPrice * 100,
-        count: item.count,
-        code: item.code,
-        package_code: item.package_code,
-        vat_percent: item.vat_percent,
-      });
+    for (let [, cartItem] of Object.entries(order.cart)) {
+      let orderItem: OrderItem = {
+        title: cartItem.name,
+        price: cartItem.totalPrice * 100,
+        count: cartItem.count,
+        code: cartItem.code,
+        package_code: cartItem.package_code,
+        vat_percent: cartItem.vat_percent,
+      };
+
+      if (cartItem?.totalDiscount) {
+        orderItem.discount = cartItem.totalDiscount * 100;
+      }
+
+      items.push(orderItem);
     }
 
     const fiscalData: OrderDetail = { receipt_type: 0, items: items };

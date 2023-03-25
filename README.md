@@ -22,6 +22,7 @@ In project we use [**Nest.js**](https://nestjs.com/), [**TypeScript**](https://w
 
 - all required requests for launch (whithout [SetFiscalData](https://developer.help.paycom.uz/metody-merchant-api/setfiscaldata), because we are sending fiscal data in [CheckPerformTransaction](https://developer.help.paycom.uz/metody-merchant-api/checktransaction))
 - fiscalization
+- discounts
 - telegram notifier
 - prisma for connecting any database
 - typescript for a better understanding business logic, type all data and handling errors without pain
