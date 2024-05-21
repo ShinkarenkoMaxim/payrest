@@ -47,10 +47,11 @@ export class OrderService {
   getFiscalData(order: Order): OrderDetail {
     const items: OrderItem[] = [];
 
+    // Attention! This implementation may differ from yours. Replace the fields according to your project and Payme documentation.
     for (let [, cartItem] of Object.entries(order.cart)) {
       let orderItem: OrderItem = {
         title: cartItem.name,
-        price: cartItem.totalPrice * 100,
+        price: cartItem.price * 100,
         count: cartItem.count,
         code: cartItem.code,
         package_code: cartItem.package_code,
